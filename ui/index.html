@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="./ui.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/bulma/0.7.0/css/bulma.min.css" rel="stylesheet">
+    <title>配置中心</title>
+    <script src="autox://sdk.v1.js"></script>
+    <style>
+        .platform-select > label {
+            margin: 0 5px
+        }
+        .config-item {
+            margin: 10px 0
+        }
+    </style>
+</head>
+<body>
+    <div class="has-background-link	" style="text-align: center;padding: 8px;color: #FFF">
+        脚本配置
+    </div>
+    <div>
+        <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                平台选择
+              </p>
+            </header>
+            <div class="card-content">
+                <div class="control platform-select">
+                    <label class="radio">
+                        <input type="radio" name="answer" checked>
+                        欢友
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="answer" disabled>
+                        聊缘(开发中)
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+            <header class="card-header">
+              <p class="card-header-title">
+                配置
+              </p>
+            </header>
+            <div class="card-content config">
+                <div class="has-text-danger" style="margin: 10px 0; font-weight: bold;">
+                    <div>回复话术请放在:/sdcard/Download/1.txt</div>
+                    <div>打招呼话术请放在:/sdcard/Download/2.txt</div>
+                    <div>每天第一次打开App尽量手动，脚本未识别手动</div>
+                </div>
+                <div class="config-item">
+                    <div class="control platform-select">
+                        <label>优先回复消息:</label>
+                        <label class="checkbox">
+                            <input type="checkbox" :val="replay.isPriority">
+                            是
+                          </label>
+                    </div>
+                    <div style="font-size: 10px;color: #606166; margin: 3px 0">
+                        选中则优先回复未回复消息(直到无新消息才会执行其他动作)
+                    </div>
+                </div>
+                <div class='config-item'>
+                    <div class="control platform-select">
+                        <label>回复设置</label>
+                        <label class="checkbox">
+                            最小数量
+                            <input type="input" :val="replay.min" style="width: 40px;">
+                        </label>
+                        ~
+                        <label class="checkbox">
+                            最大数量
+                            <input type="input" :val="replay.max" style="width: 40px;">
+                        </label>
+                    </div>
+                    <div style="font-size: 10px;color: #606166; margin: 5px 0">
+                        (未勾选优先回复消息此项配置有效),如果随机到5，则表示在回复5条消息或者是没有消息可回复的情况下执行其他动作
+                    </div>
+                </div>
+                <div class="config-item">
+                    <div class="control platform-select">
+                        <label>是否刷新动态:</label>
+                        <label class="checkbox">
+                            <input type="checkbox" :val="dynamic.isRefresh">
+                            是
+                        </label>
+                    </div>
+                    <div class="control platform-select">
+                        <label>动态刷新</label>
+                        <label class="checkbox">
+                            最小时间
+                            <input type="input" :val="dynamic.min" style="width: 40px;">
+                        </label>
+                        ~
+                        <label class="checkbox">
+                            最大时间
+                            <input type="input" :val="dynamic.max" style="width: 40px;">
+                        </label>
+                    </div>
+                    <label style="font-size: 10px;color: #606166; margin: 3px 0">
+                        (勾选刷新动态有效)随机一个数，比如随机到100,则会刷新100s过后执行下一个动作,如果勾选了优先回复消息，则在刷新动态过程中会花时间回复消息，此时间会计入刷新动态时间
+                    </label>
+                </div>
+                <div class="config-item">
+                    <div class="control platform-select">
+                        <label>动态随机点赞:</label>
+                        <label class="checkbox">
+                            <input type="checkbox" :val="dynamic.isLike">
+                            是
+                        </label>
+                    </div>
+                    <div class="control platform-select">
+                        <label>点赞概率:</label>
+                        <label class="checkbox">
+                            <input type="input" :val="dynamic.likeChance">
+                        </label>
+                    </div>
+                    <div style="font-size: 10px;color: #606166; margin: 3px 0">
+                        在刷新动态的时候随机点赞动态,概率设置1 则为1%
+                    </div>
+                </div>
+                <div class="config-item">
+                    <div class="control platform-select">
+                        <label>是否打招呼:</label>
+                        <label class="checkbox">
+                            <input type="checkbox" :val="hello.isSayHello">
+                            是
+                          </label>
+                    </div>
+                    <div style="font-size: 10px;color: #606166; margin: 3px 0">
+                        选中则优先回复未回复消息(直到无新消息才会执行其他动作)
+                    </div>
+                </div>
+                <div class='config-item'>
+                    <div class="control platform-select">
+                        <label>打招呼设置</label>
+                        <label class="checkbox">
+                            最小
+                            <input type="input" :val="hello.min" style="width: 40px;">
+                        </label>
+                        ~
+                        <label class="checkbox">
+                            最大
+                            <input type="input" :val="hello.max" style="width: 40px;">
+                        </label>
+                    </div>
+                    <div style="font-size: 10px;color: #606166; margin: 5px 0">
+                        (勾选打招呼有效),如果随机到5，则表示在打招呼5次过后则进行其他动作
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div id="log"></div>
+        <div style="margin-top: 10px;">
+            <div style="display: flex; flex-wrap: wrap;justify-content: space-around;">
+                <div><button class="button is-small has-background-primary has-text-white is-rounded" @click="openFloaty">打开悬浮窗</button></div>
+                <div><button class="button is-small has-background-primary has-text-white is-rounded" @click="openAuto">打开无障碍</button></div>
+                <div><button class="button is-small has-background-primary has-text-white is-rounded" @click="changeInput" onclick="app.method.changeInput">切换输入法</button></div>
+                <div><button class="button is-small has-background-primary has-text-white is-rounded" @click="start">启动脚本</button></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const onscripterror = (e) => {
+            const el = document.getElementById('log')
+            el.innerText += "\r\n" + JSON.parse(e)
+        }
+        const _log = (ctx) => {
+            const e = document.getElementById('log')
+            e.innerText += ctx + "\r\n"
+        }
+    </script>
+    <script onerror="onscripterror">
+        var app = {
+            data: {
+
+            },
+            method: {
+                openFloaty() {
+                    $autox.callHandler('requestPermission', 'floaty')
+                },
+                openAuto() {
+                    $autox.callHandler("requestPermission", 'auto')
+                },
+                changeInput() {
+                    $autox.callHandler("changeImm")
+                },
+                start() {
+                    _log("开始执行")
+                    try {
+                        $autox.callHandler("run", JSON.stringify(app.data))
+                    }catch(e) {
+                        _log(e.message)
+                    }
+                    _log("运行成功")
+                }
+            }
+        }
+        window.onload = () => {
+            const _cache = localStorage.getItem("__CACHE__")
+            try {
+                const j = JSON.parse(_cache)
+                for (let key in j ) {
+                    if (j[key] ) {
+                        app.data[key] = j[key]
+                    }
+                }
+                // 设置默认值
+                const inputs = document.querySelectorAll('input')
+                for (let i = 0; i < inputs.length; ++i) {
+                    const attr = inputs[i].getAttribute(':val')
+                    if (!attr) continue
+                    console.log(attr)
+                    const keys = attr.split('.')
+                    let currentObj = app.data
+                    for (let j = 0; j < keys.length - 1; ++j ) {
+                        currentObj = app.data[keys[j]]
+                    }
+                    console.log('currentObj', currentObj, keys[keys.length - 1])
+                    if (inputs[i].type === 'checkbox') {
+                        inputs[i].checked = currentObj[keys[keys.length - 1]]
+                        continue
+                    }
+                    inputs[i].value = currentObj[keys[keys.length - 1]]
+                }
+            }catch(e) {
+                console.log(e)
+            }
+        }
+
+        const onInputChange = (e) => {
+            const el = e.target
+            const bindValue = el.getAttribute(':val')
+            if (!bindValue) {
+                return 
+            }
+            const appKeys = bindValue.split(".")
+            let currentObj = app.data
+            for (let i = 0; i < appKeys.length - 1; i ++ ) {
+                if (!currentObj[appKeys[i]]) {
+                    currentObj[appKeys[i]] = {}
+                }
+                currentObj = currentObj[appKeys[i]]
+            }
+            let v = ''
+            if (e.target.type === 'checkbox') {
+                v = e.target.checked
+            }
+            if (e.target.type === 'text') {
+                v = e.target.value
+            }
+            currentObj[appKeys[appKeys.length - 1]] = v
+            saveConfig()
+        }
+        const inputs = document.querySelectorAll('input')
+        for (let i = 0; i < inputs.length; i ++ ) {inputs[i].addEventListener('input', onInputChange)}
+        const clickDoms = document.querySelectorAll('[\\@click]')
+        for (let i = 0; i < clickDoms.length; i ++ ) {
+            const method = clickDoms[i].getAttribute('@click')
+            if (!method) continue
+            clickDoms[i].addEventListener('click', () => app.method[method].call(app))
+        }
+        const saveConfig = () => {
+            localStorage.setItem("__CACHE__", JSON.stringify(app.data))
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+    "name": "ChatHelper",
+    "main": "main.js",
+    "ignore": [
+        "build"
+    ],
+    "packageName": "com.example.chathelper",
+    "versionName": "1.0.0",
+    "versionCode": 1
+}

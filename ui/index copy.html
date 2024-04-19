@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脚本设置</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/picocss/1.2.1/pico.min.css" rel="stylesheet">
+    <script src="autox://sdk.v1.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0
+        }
+        .flex {
+            display: flex;
+        }
+        .flex > div {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul></ul>
+        <ul>
+          <li><strong>脚本设置</strong></li>
+        </ul>
+        <ul></ul>
+      </nav>
+    <main class="container-fluid">
+        <div>
+            <fieldset class="grid">
+                <legend>全局速度设置</legend>
+                <input
+                    placeholder="数字越大程序越快, 默认1"
+                    type="number"
+                    id="speed"
+                    value="1"
+                />
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <legend>平台选择:</legend>
+                <input name="platform-select" type="radio" id="platform_huanyou" checked />
+                <label htmlFor="platform_huanyou">欢友</label>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="grid">
+                <legend>引流话术</legend>
+                <input
+                    placeholder="引流话术"
+                    id="vTick"
+                    value="你好"
+                />
+            </fieldset>
+        </div>
+        <div id="log" style="height: 200px;display: none">
+
+        </div>
+    </main>
+    <footer>
+        <div class="flex" style="padding: 10px;font-size: 14px !important;">
+            <div style="flex: 1" onclick="start()"><button>启动脚本</button></div>
+            <div style="flex: 1" onclick="changeInput()"><button >切换输入法</button></div>
+            <div style="flex: 1" onclick="openFloaty()"><button >打开悬浮窗</button></div>
+            <div style="flex: 1" onclick="openAuto()"><button >打开无障碍</button></div>
+        </div>
+    </footer>
+    <script>
+        function log(string) {
+            document.getElementById('log').innerText = string
+        }
+        function openFloaty() {
+            $autox.callHandler('requestPermission', 'floaty')
+        }
+        function openAuto() {
+            $autox.callHandler("requestPermission", 'auto')
+        }
+        function changeInput() {
+            $autox.callHandler("changeImm")
+        }
+        function start() {
+            let config = {
+                speed: document.getElementById('speed').value,
+                vTick: document.getElementById('vTick').value
+            }
+            log(JSON.stringify(config))
+            localStorage.setItem("__config__", JSON.stringify(config))
+            $autox.callHandler("run", JSON.stringify(config))
+        }
+        (function(){
+            const _cache = localStorage.getItem("__config__")
+            try {
+                const j = JSON.parse(_cache)
+                document.getElementById('speed').value = j.speed
+                document.getElementById('vTick').value = j.vTick
+            }catch(e) {
+
+            }
+            
+        })()
+    </script>
+</body>
+</html>
